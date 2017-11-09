@@ -89,11 +89,13 @@ namespace WindowsFormsApplication1
                 r.End = r.End - wordText2.Length;
                 if (CountKFind >= nf) // если нужный по счету фрагмент найден
                 {
-                    r = WordApp.ActiveDocument.Range(r.Start, r.End);
+                   // r = WordApp.ActiveDocument.Range(r.Start, r.End);
+                    break;
                 }
             }
-            if (CountKFind == 0)
-            {
+
+            CountKFind = 0;
+            
                 if (r.Text != "")
                 {
                     if (st != "")
@@ -111,7 +113,7 @@ namespace WindowsFormsApplication1
                         Clipboard.Clear();
                     }
                 }
-            }
+            
             return st;
         }
         private void Form1_Load(object sender, EventArgs e)
@@ -203,8 +205,10 @@ namespace WindowsFormsApplication1
                 for (int y = 1; y <= r.ListParagraphs.Count;  y++)
                 {
                     string dfs = r.ListParagraphs[y].Range.Text;
+                    r.ListParagraphs[y].Range.Copy();
                     D.MyListAdd(dfs, false);
-                    richTextBox4.Text = richTextBox4.Text + D.LiteraBasic[y-1];
+                    richTextBox4.Paste();
+                    //richTextBox4.Text = richTextBox4.Text + D.LiteraBasic[y-1];
                 }
             }
             // поиск дополнительной литературы
@@ -224,8 +228,10 @@ namespace WindowsFormsApplication1
                 for (int x = 1; x <= r.ListParagraphs.Count; x++)
                 {
                     string dsf = r.ListParagraphs[x].Range.Text;
+                    r.ListParagraphs[x].Range.Copy();
                     D.MyListAdd(dsf, true);
-                    richTextBox5.Text = richTextBox5.Text + D.LiteraAdditional[x-1];
+                    richTextBox5.Paste();
+                    //richTextBox5.Text = richTextBox5.Text + D.LiteraAdditional[x-1];
                 }
             } // поиск закончился, литература записана в массив
 
@@ -290,6 +296,7 @@ namespace WindowsFormsApplication1
                 D.tems[i - 2].Rez = WordApp.ActiveDocument.Tables[2].Cell(i, 5).Range.Text;
                 D.tems[i - 2].FormZ = WordApp.ActiveDocument.Tables[2].Cell(i, 6).Range.Text;
                 CountTems++;
+                
                 richTextBox2.Text = richTextBox2.Text + D.tems[i - 2].Name + D.tems[i - 2].Text + D.tems[i - 2].Rez + D.tems[i - 2].FormZ;
                 Clipboard.SetText(richTextBox2.Text + D.tems[i - 2].Name + D.tems[i - 2].Text + D.tems[i - 2].Rez + D.tems[i - 2].FormZ);
                 
@@ -309,7 +316,7 @@ namespace WindowsFormsApplication1
 
             // считываются темы и их литература, вопросы для самопроверки
         ss = SearchText("Перечень учебно-методического обеспечения для самостоятельной работы обучающихся по дисциплине", "Материально-техническое обеспечение дисциплины", 2);
-        Clipboard.SetText(ss);
+        //Clipboard.SetText(ss);
         
             int n1, n2, n3, n4;
             n1 = ss.IndexOf("Тема");
@@ -414,7 +421,7 @@ namespace WindowsFormsApplication1
                 richTextBox2.SelectedText.Remove(0, k - 1);
             }
             ss = SearchText("характеризующих этапы формирования компетенций в процессе освоения образовательной программы", "VII.  МЕТОДИЧЕСКИЕ УКАЗАНИЯ ДЛЯ ОБУЧАЮЩИХСЯ", 2);
-            Clipboard.SetText(ss);
+            //Clipboard.SetText(ss);
         if (ss.Length > 500) //  ' Вставка в RTB3 заданий и вопросов к экзамену
           {
                 richTextBox3.Text = "";
@@ -511,7 +518,6 @@ namespace WindowsFormsApplication1
             string exf1 = r.Find.Text;
             r.Find.Wrap = word.WdFindWrap.wdFindContinue; //при достижении конца документа поиск будет продолжаться с начала пока не будет достигнуто положение начала поиска
             r.Find.MatchWildcards = true;//подстановочные знаки ВКЛ
-
             if (r.Find.Execute(exf1))// Проверка поиска, если нашёл фрагменты, то...
             {
 
@@ -520,10 +526,11 @@ namespace WindowsFormsApplication1
                 r.End = r.End - exstr3.Length;
                 int exm21 = r.ListParagraphs.Count;
                 for (int y = 1; y <= r.ListParagraphs.Count; y++)
-                {
+                {     
                     string dfs = r.ListParagraphs[y].Range.Text;
+                    r.ListParagraphs[y].Range.Copy();
                     D.MyForExamAdd(dfs);
-                    richTextBox1.Text = richTextBox1.Text + D.ForExam[y - 1];
+                    richTextBox1.Paste();              
                 }
 
 
@@ -536,7 +543,7 @@ namespace WindowsFormsApplication1
             string exf1 = r.Find.Text;
             r.Find.Wrap = word.WdFindWrap.wdFindContinue; //при достижении конца документа поиск будет продолжаться с начала пока не будет достигнуто положение начала поиска
             r.Find.MatchWildcards = true;//подстановочные знаки ВКЛ
-
+            
             if (r.Find.Execute(exf1))// Проверка поиска, если нашёл фрагменты, то...
             {
                 exgg1 = WordApp.ActiveDocument.Range(r.Start + exstr1.Length, r.End - exstr2.Length).Text; //убираем кл.
@@ -546,8 +553,9 @@ namespace WindowsFormsApplication1
                 for (int y = 1; y <= r.ListParagraphs.Count; y++)
                 {
                     string dfs = r.ListParagraphs[y].Range.Text;
+                    r.ListParagraphs[y].Range.Copy();
                     D.MyForExamAdd(dfs);
-                    richTextBox1.Text = richTextBox1.Text + D.ForExam[y - 1];
+                    richTextBox1.Paste();
                 }
             }
 
